@@ -67,13 +67,10 @@ This is an example of how to configure the official [aws-sdk gem] [aws-sdk], to
 let it talk to Fake SQS.
 
 ``` ruby
-AWS.config(
-  :use_ssl           => false,
-  :sqs_endpoint      => "localhost",
-  :sqs_port          => 4568,
+AWS.config = {
   :access_key_id     => "access key id",
   :secret_access_key => "secret access key"
-)
+}
 ```
 
 If you have the configuration options for other libraries, please give them to
@@ -105,13 +102,10 @@ Here are the methods you need to run FakeSQS programmatically.
 require "fake_sqs/test_integration"
 
 # globally, before the test suite starts:
-AWS.config(
-  use_ssl:            false,
-  sqs_endpoint:       "localhost",
-  sqs_port:           4568,
+Aws.config = {
   access_key_id:      "fake access key",
   secret_access_key:  "fake secret key",
-)
+}
 fake_sqs = FakeSQS::TestIntegration.new
 
 # before each test that requires SQS:
@@ -128,13 +122,10 @@ By starting it like this it will start when needed, and reset between each test.
 Here's an example for RSpec to put in `spec/spec_helper.rb`:
 
 ``` ruby
-AWS.config(
-  use_ssl:            false,
-  sqs_endpoint:       "localhost",
-  sqs_port:           4568,
+Aws.config = {
   access_key_id:      "fake access key",
   secret_access_key:  "fake secret key",
-)
+}
 
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true
@@ -149,7 +140,7 @@ Now you can use the `:sqs metadata to enable SQS integration:
 ``` ruby
 describe "something with sqs", :sqs do
   it "should work" do
-    queue = AWS::SQS.new.queues.create("my-queue")
+    queue = Aws::SQS::Client.new.create_queue("my-queue")
   end
 end
 ```

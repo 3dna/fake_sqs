@@ -1,8 +1,8 @@
 require 'rack/request'
+require 'yaml'
 
 module FakeSQS
   class ShowOutput
-
     def initialize(app)
       @app = app
     end
@@ -15,6 +15,5 @@ module FakeSQS
       puts *result.last
       result
     end
-
   end
 end

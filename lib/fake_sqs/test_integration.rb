@@ -59,7 +59,7 @@ module FakeSQS
     private
 
     def option(key)
-      options.fetch(key) { AWS.config.public_send(key) }
+      options.fetch(key) { Aws.config[key] }
     end
 
     def database
