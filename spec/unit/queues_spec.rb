@@ -25,11 +25,9 @@ describe FakeSQS::Queues do
       expect(create_queue("test")).to eq(queue)
     end
 
-    it "cannot create a queue with the same name" do
-      create_queue("test")
-      expect {
-        create_queue("test")
-      }.to raise_error(FakeSQS::QueueNameExists, "test")
+    it "returns the queue if it's already created" do
+      existing_queue = create_queue("test")
+      expect(create_queue("test")).to eq(existing_queue)
     end
 
   end
