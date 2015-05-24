@@ -23,7 +23,7 @@ module FakeSQS
     end
 
     def start!
-      args = [ binfile, "-p", port.to_s, verbose, logging, "--database", database, { :out => out, :err => out } ].flatten.compact
+      args = [ binfile, "-p", port.to_s, verbose, logging, database, { :out => out, :err => out } ].flatten.compact
       @pid = Process.spawn(*args)
       wait_until_up
     end
@@ -63,7 +63,11 @@ module FakeSQS
     end
 
     def database
-      options.fetch(:database)
+      if options.has_key? :database
+        ["--database", options.fetch(:database)]
+      else
+        []
+      end
     end
 
     def verbose
