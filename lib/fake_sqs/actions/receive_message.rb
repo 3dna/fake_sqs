@@ -18,9 +18,10 @@ module FakeSQS
               xml.ReceiptHandle receipt
               xml.MD5OfBody message.md5
               xml.Body message.body
-              message.attributes.each do |k, v|
+              message.attributes.each do |name, value|
                 xml.Attribute do
-                  xml.send(k, v)
+                  xml.Name name
+                  xml.Value value
                 end
               end
             end
