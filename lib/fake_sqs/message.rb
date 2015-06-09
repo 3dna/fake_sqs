@@ -3,13 +3,14 @@ require 'securerandom'
 module FakeSQS
   class Message
 
-    attr_reader :body, :id, :md5
+    attr_reader :body, :id, :md5, :attributes
     attr_accessor :visibility_timeout
 
     def initialize(options = {})
       @body = options.fetch("MessageBody")
       @id = options.fetch("Id") { SecureRandom.uuid }
       @md5 = options.fetch("MD5") { Digest::MD5.hexdigest(@body) }
+      @attributes = default_attributes.merge(options["Attributes"] || {})
     end
 
     def expire!
@@ -24,11 +25,13 @@ module FakeSQS
       self.visibility_timeout = Time.now + seconds
     end
 
-    def attributes
+    private
+    def default_attributes
       {
-        "MessageBody" => body,
-        "Id" => id,
-        "MD5" => md5,
+        "SenderId" => SecureRandom.hex,
+        "SentTimestamp" => Time.now.to_i,
+        "ApproximateReceiveCount" => 0,
+        "ApproximateFirstReceiveTimestamp" => Time.now.to_i
       }
     end
 

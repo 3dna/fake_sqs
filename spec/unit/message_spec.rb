@@ -22,6 +22,22 @@ describe FakeSQS::Message do
     end
   end
 
+  describe "#attributes" do
+    it "is defaulted" do
+      message = create_message
+      expect(message.attributes["SenderId"]).not_to be_nil
+      expect(message.attributes["SentTimestamp"].to_i).to be >= Time.now.to_i
+      expect(message.attributes["ApproximateReceiveCount"]).to eq(0)
+      expect(message.attributes["ApproximateFirstReceiveTimestamp"]).to be >= Time.now.to_i
+    end
+
+    it "can be overriden" do
+      message = create_message("Attributes" => {"SenderId" => "foobar", "custom" => "values"})
+      expect(message.attributes["SenderId"]).to eq "foobar"
+      expect(message.attributes["custom"]).to eq("values")
+    end
+  end
+
   describe 'visibility_timeout' do
     let :message do
       create_message
